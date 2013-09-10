@@ -1,0 +1,12 @@
+{{ .SetTitle "stuff page" }}
+{{ template "chrome/header.html" . }}
+<h2>
+	some page in dirs
+</h2>
+<p>
+	This file is a demonstration of breadcrumbs in header.
+</p>
+<p>
+	The header chrome file is aware that files named "index" are special, and generates breadcrumbs linking only to the directory.
+	It's worth noting that the template engine doesn't know a thing about this, and doesn't do anything special to support it &mdash; any header file can do this.
+</p>
