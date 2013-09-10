@@ -123,19 +123,23 @@ func (page *PageData) SetTitle(title string) string {
 	return ""
 }
 
-type Map map[string]interface{}
+type Map struct {
+	m map[string]interface{}
+}
 
 func NewMap() Map {
-	return make(map[string]interface{})
+	return Map{
+		m: make(map[string]interface{}),
+	}
 }
 
 func (m Map) Set(key string, value interface{}) string {
-	m[key] = value
+	m.m[key] = value
 	return ""
 }
 
 func (m Map) Get(key string) interface{} {
-	return m[key]
+	return m.m[key]
 }
 
 var funcs = template.FuncMap{
