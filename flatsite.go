@@ -122,8 +122,9 @@ var funcs = template.FuncMap{
 	"NewMap": func() Map {
 		return NewMap()
 	},
-	"Set": func(m Map, key string, value interface{}) string {
-		return m.Set(key, value)
+	"Set": func(m Map, key string, value interface{}) interface{} {
+		m.Set(key, value)
+		return value
 	},
 }
 
