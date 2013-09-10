@@ -123,9 +123,27 @@ func (page *PageData) SetTitle(title string) string {
 	return ""
 }
 
+type Map map[string]interface{}
+
+func NewMap() Map {
+	return make(map[string]interface{})
+}
+
+func (m Map) Set(key string, value interface{}) string {
+	m[key] = value
+	return ""
+}
+
+func (m Map) Get(key string) interface{} {
+	return m[key]
+}
+
 var funcs = template.FuncMap{
 	"eq": func(a interface{}, b interface{}) bool {
 		return a == b
+	},
+	"NewMap": func() Map {
+		return NewMap()
 	},
 }
 
