@@ -1,15 +1,16 @@
 <!doctype html>
+{{ template "config" . }}
 <head>
 <meta charset='UTF-8'>
 <link rel='shortcut icon' href='/favicon.ico'>
 <meta name='robots' content='nocache, noarchive'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>{{ .Title }}</title>
+<title>{{ .Get "title" }}</title>
 <link rel='stylesheet' href='/style/css.css' type='text/css'>
 </head>
 <body>
-<h1><a href="/">{{ .Site.Name }}</a></h1>/
-{{ range .Path.Paths }}
+<h1><a href="/">{{ (.Get "site").Get "name" }}</a></h1>/
+{{ range (.Get "path").Paths }}
 	{{ if printf "%.6s" .LastChunk | eq "index." }}
 	{{ else }}
 		<a href="/{{ . }}">{{ .LastChunk }}</a> /

@@ -15,12 +15,6 @@ func main() {
 	flatsite.OutputDir = getConf("OUTPUT_DIR", "www")
 	flatsite.InputDir  = getConf("INPUT_DIR",  "tmpl")
 
-	// read config for site
-	site := SiteData{
-		Name: getConf("SITE_NAME", "SITE_NAME"),
-		BaseUrl: getConf("BASE_URL", "http://localhost/"),
-	}
-
 	// walk filesystem, load all templates
 	flatsite.Templates = template.New("templates")
 	flatsite.Templates.Funcs(funcs)
@@ -53,12 +47,9 @@ func main() {
 		pth := NewPath(v.Name())
 		if pth.Chunks[0] != "output" { continue; }
 		Fprintf(os.Stdout, "\t%s : %#v\n", v.Name(), v)
-		page := PageData{
-			Site: site,
-			Path: pth,
-			Template: v,
-		}
-		if err := flatsite.generateFile(page); err != nil {
+		page := NewMap()
+		page.Set("path", Path{Chunks: pth.Chunks[1:]})
+		if err := flatsite.generateFile(v, page); err != nil {
 			Fprintf(os.Stderr, "\t\t%s \"%s\": %s\n", "failed to generate from template", v.Name(), err)
 		}
 	}
@@ -77,18 +68,6 @@ type FlatSite struct {
 	OutputDir  string
 	InputDir   string
 	Templates  *template.Template
-}
-
-type SiteData struct {
-	Name     string
-	BaseUrl  string
-}
-
-type PageData struct {
-	Site      SiteData
-	Path      Path
-	Template  *template.Template
-	Title     string
 }
 
 func NewPath(pth string) Path {
@@ -118,19 +97,12 @@ func (pth Path) LastChunk() string {
 	return pth.Chunks[len(pth.Chunks)-1]
 }
 
-func (page *PageData) SetTitle(title string) string {
-	page.Title = title
-	return ""
-}
-
 type Map struct {
 	m map[string]interface{}
 }
 
 func NewMap() Map {
-	return Map{
-		m: make(map[string]interface{}),
-	}
+	return Map{m: make(map[string]interface{})}
 }
 
 func (m Map) Set(key string, value interface{}) string {
@@ -151,8 +123,8 @@ var funcs = template.FuncMap{
 	},
 }
 
-func (flatsite *FlatSite) generateFile(page PageData) error {
-	outputPath := filepath.Join(page.Path.Chunks[1:]...)
+func (flatsite *FlatSite) generateFile(tmpl *template.Template, page Map) error {
+	outputPath := filepath.Join(page.Get("path").(Path).Chunks...)
 	outputPathFull := filepath.Join(flatsite.OutputDir, outputPath)
 	os.MkdirAll(path.Dir(outputPathFull), 0755)
 	w, err := os.Create(outputPathFull)
@@ -161,6 +133,5 @@ func (flatsite *FlatSite) generateFile(page PageData) error {
 	}
 	defer w.Close()
 
-	page.Path = Path{Chunks: page.Path.Chunks[1:]}
-	return page.Template.Execute(w, &page)
+	return tmpl.Execute(w, &page)
 }

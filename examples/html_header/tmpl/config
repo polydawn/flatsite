@@ -1,0 +1,3 @@
+{{ $site := NewMap }}
+{{ $site.Set "name" "SITE_NAME" }}
+{{ .Set "site" $site }}
