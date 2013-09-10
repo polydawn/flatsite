@@ -126,6 +126,9 @@ var funcs = template.FuncMap{
 		m.Set(key, value)
 		return value
 	},
+	"Nul": func(_ ...interface{}) string {
+		return ""
+	},
 }
 
 func (flatsite *FlatSite) generateFile(tmpl *template.Template, page Map) error {
