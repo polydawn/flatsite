@@ -100,10 +100,13 @@ func (pth Path) LastChunk() string {
 type Map map[string]interface{}
 
 func NewMap() Map {
-	return make(map[string]interface{})
+	m := make(map[string]interface{})
+	m[""] = ""
+	return m
 }
 
 func (m Map) Set(key string, value interface{}) string {
+	if _, ok := m[""]; len(m) == 1 && ok { delete(m, ""); }
 	m[key] = value
 	return ""
 }
