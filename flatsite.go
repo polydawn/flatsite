@@ -97,21 +97,19 @@ func (pth Path) LastChunk() string {
 	return pth.Chunks[len(pth.Chunks)-1]
 }
 
-type Map struct {
-	m map[string]interface{}
-}
+type Map map[string]interface{}
 
 func NewMap() Map {
-	return Map{m: make(map[string]interface{})}
+	return make(map[string]interface{})
 }
 
 func (m Map) Set(key string, value interface{}) string {
-	m.m[key] = value
+	m[key] = value
 	return ""
 }
 
 func (m Map) Get(key string) interface{} {
-	return m.m[key]
+	return m[key]
 }
 
 var funcs = template.FuncMap{
@@ -120,6 +118,9 @@ var funcs = template.FuncMap{
 	},
 	"NewMap": func() Map {
 		return NewMap()
+	},
+	"Set": func(m Map, key string, value interface{}) string {
+		return m.Set(key, value)
 	},
 }
 

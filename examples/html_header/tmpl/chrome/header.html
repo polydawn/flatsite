@@ -9,8 +9,8 @@
 <link rel='stylesheet' href='/style/css.css' type='text/css'>
 </head>
 <body>
-<h1><a href="/">{{ (.Get "site").Get "name" }}</a></h1>/
-{{ range (.Get "path").Paths }}
+<h1><a href="/">{{ .site.Get "name" }}</a></h1>/
+{{ range .path.Paths }}
 	{{ if printf "%.6s" .LastChunk | eq "index." }}
 	{{ else }}
 		<a href="/{{ . }}">{{ .LastChunk }}</a> /
