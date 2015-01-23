@@ -19,6 +19,10 @@ func main() {
 	flatsite.Templates = template.New("templates")
 	flatsite.Templates.Funcs(funcs)
 	filepath.Walk(flatsite.InputDir, func(name string, info os.FileInfo, err error) error {
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "file %q traversal err: %s\n", name, err)
+			return nil
+		}
 		isHidden := []rune(path.Base(name))[0] == '.'
 		if info.IsDir() {
 			if isHidden {
