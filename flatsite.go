@@ -141,7 +141,7 @@ func (flatsite *FlatSite) generateFile(tmpl *template.Template, page Map) error 
 	os.MkdirAll(path.Dir(outputPathFull), 0755)
 	w, err := os.Create(outputPathFull)
 	if err != nil {
-		return fmt.Errorf("error creating static file %s: %s", outputPath, err)
+		return fmt.Errorf("error creating static file %q: %s", outputPath, err)
 	}
 	defer w.Close()
 
