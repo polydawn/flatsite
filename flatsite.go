@@ -13,14 +13,14 @@ import (
 func main() {
 	flatsite := &FlatSite{}
 	flatsite.OutputDir = getConf("OUTPUT_DIR", "www")
-	flatsite.InputDir  = getConf("INPUT_DIR",  "tmpl")
+	flatsite.InputDir = getConf("INPUT_DIR", "tmpl")
 
 	// walk filesystem, load all templates
 	flatsite.Templates = template.New("templates")
 	flatsite.Templates.Funcs(funcs)
 	filepath.Walk(flatsite.InputDir, func(name string, info os.FileInfo, err error) error {
 		isHidden := []rune(path.Base(name))[0] == '.'
-		if (info.IsDir()) {
+		if info.IsDir() {
 			if isHidden {
 				return filepath.SkipDir
 			} else {
@@ -45,7 +45,9 @@ func main() {
 	Printf("Generating public templates:\n")
 	for _, v := range flatsite.Templates.Templates() {
 		pth := NewPath(v.Name())
-		if pth.Chunks[0] != "output" { continue; }
+		if pth.Chunks[0] != "output" {
+			continue
+		}
 		Fprintf(os.Stdout, "\t%s : %#v\n", v.Name(), v)
 		page := NewMap()
 		page.Set("path", Path{Chunks: pth.Chunks[1:]})
@@ -65,9 +67,9 @@ func getConf(key string, defalt string) string {
 }
 
 type FlatSite struct {
-	OutputDir  string
-	InputDir   string
-	Templates  *template.Template
+	OutputDir string
+	InputDir  string
+	Templates *template.Template
 }
 
 func NewPath(pth string) Path {
@@ -88,7 +90,7 @@ func (pth Path) Paths() []Path {
 	n := len(pth.Chunks)
 	v := make([]Path, n)
 	for i := 0; i < n; i++ {
-		v[i] = Path{Chunks: pth.Chunks[0:i+1]}
+		v[i] = Path{Chunks: pth.Chunks[0 : i+1]}
 	}
 	return v
 }
@@ -106,7 +108,9 @@ func NewMap() Map {
 }
 
 func (m Map) Set(key string, value interface{}) string {
-	if _, ok := m[""]; len(m) == 1 && ok { delete(m, ""); }
+	if _, ok := m[""]; len(m) == 1 && ok {
+		delete(m, "")
+	}
 	m[key] = value
 	return ""
 }
