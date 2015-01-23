@@ -16,6 +16,7 @@ func main() {
 	flatsite.InputDir = getConf("INPUT_DIR", "tmpl")
 
 	// walk filesystem, load all templates
+	fmt.Fprintf(os.Stderr, "Loading templates...\n")
 	flatsite.Templates = template.New("templates")
 	flatsite.Templates.Funcs(funcs)
 	filepath.Walk(flatsite.InputDir, func(name string, info os.FileInfo, err error) error {
@@ -46,7 +47,7 @@ func main() {
 	})
 
 	// generate and output templates
-	fmt.Printf("Generating public templates:\n")
+	fmt.Fprintf(os.Stderr, "Generating public templates...\n")
 	for _, v := range flatsite.Templates.Templates() {
 		pth := NewPath(v.Name())
 		if pth.Chunks[0] != "output" {
