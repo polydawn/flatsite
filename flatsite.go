@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "fmt"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"os"
@@ -34,7 +34,7 @@ func main() {
 					name, _ = filepath.Rel(flatsite.InputDir, name)
 					flatsite.Templates.New(name).Parse(string(content))
 				} else {
-					Fprintf(os.Stderr, "%s \"%s\": %s\n", "failed to read template file", name, err)
+					fmt.Fprintf(os.Stderr, "%s \"%s\": %s\n", "failed to read template file", name, err)
 				}
 			}
 		}
@@ -42,17 +42,17 @@ func main() {
 	})
 
 	// generate and output templates
-	Printf("Generating public templates:\n")
+	fmt.Printf("Generating public templates:\n")
 	for _, v := range flatsite.Templates.Templates() {
 		pth := NewPath(v.Name())
 		if pth.Chunks[0] != "output" {
 			continue
 		}
-		Fprintf(os.Stdout, "\t%s : %#v\n", v.Name(), v)
+		fmt.Fprintf(os.Stdout, "\t%s : %#v\n", v.Name(), v)
 		page := NewMap()
 		page.Set("path", Path{Chunks: pth.Chunks[1:]})
 		if err := flatsite.generateFile(v, page); err != nil {
-			Fprintf(os.Stderr, "\t\t%s \"%s\": %s\n", "failed to generate from template", v.Name(), err)
+			fmt.Fprintf(os.Stderr, "\t\t%s \"%s\": %s\n", "failed to generate from template", v.Name(), err)
 		}
 	}
 }
@@ -141,7 +141,7 @@ func (flatsite *FlatSite) generateFile(tmpl *template.Template, page Map) error 
 	os.MkdirAll(path.Dir(outputPathFull), 0755)
 	w, err := os.Create(outputPathFull)
 	if err != nil {
-		return Errorf("error creating static file %s: %s", outputPath, err)
+		return fmt.Errorf("error creating static file %s: %s", outputPath, err)
 	}
 	defer w.Close()
 
